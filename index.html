@@ -1113,6 +1113,10 @@ nav button span { font-size:.7rem; }
       <button class="btn btn-outline btn-sm" style="flex:1" onclick="syncOddsFromAPI(true)">Sync cotes</button>
       <button class="btn btn-outline btn-sm" style="flex:1" onclick="exportBackup()">Sauvegarder</button>
     </div>
+    <div style="padding:12px 20px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px">
+      <span style="font-size:.84rem;color:var(--ink-2);flex:1">Pronostics déverrouillés (override admin)</span>
+      <button id="pred-unlock-btn" class="btn btn-sm" style="min-width:80px" onclick="togglePredUnlock()"></button>
+    </div>
     <div class="filter-tabs" id="res-filter-tabs">
       <div class="filter-tab active" onclick="filterResGroup('all',this)">Tous</div>
       <div class="filter-tab" onclick="filterResGroup('A',this)">A</div>
@@ -1409,7 +1413,7 @@ const FINAL_MATCHES = [
 MATCHES.push(...FINAL_MATCHES);
 
 // ── STATE ──
-let S = { players:[], preds:{}, results:{}, matchMeta:{}, adminCode:'1234', adminOpen:false };
+let S = { players:[], preds:{}, results:{}, matchMeta:{}, adminCode:'1234', adminOpen:false, predUnlock:false };
 let editId = null;
 let selColor = COLORS[0];
 let selPhoto = null;
@@ -1432,11 +1436,12 @@ async function load() {
     S.results = d.results || {};
     S.matchMeta = d.matchMeta || {};
     S.adminCode = d.adminCode || '1234';
+    S.predUnlock = d.predUnlock || false;
   }
 }
 
 async function save() {
-  const d = { players:S.players, preds:S.preds, results:S.results, matchMeta:S.matchMeta, adminCode:S.adminCode };
+  const d = { players:S.players, preds:S.preds, results:S.results, matchMeta:S.matchMeta, adminCode:S.adminCode, predUnlock:S.predUnlock };
   await stateRef.set(d);
 }
 
@@ -1449,6 +1454,7 @@ function startSync() {
     S.results = d.results || {};
     S.matchMeta = d.matchMeta || {};
     if (d.adminCode) S.adminCode = d.adminCode;
+    S.predUnlock = d.predUnlock || false;
     const active = document.querySelector('.view.active')?.id;
     if (active === 'view-home') renderHome();
     if (active === 'view-pronos') {
@@ -1521,6 +1527,7 @@ function isTournoiGloballyLocked() {
 }
 
 function isPredictionLocked(m) {
+  if (S.predUnlock) return false;
   if (KNOCKOUT_GROUPS.has(m.g) && isTournoiGloballyLocked()) return true;
   const kickoff = matchKickoff(m);
   return isClosedStatus(matchStatus(m)) || (!isNaN(kickoff) && Date.now() >= kickoff.getTime());
@@ -2561,12 +2568,32 @@ function exportBackup() {
 }
 
 // ── RÉSULTATS ──
+function updatePredUnlockBtn() {
+  const btn = document.getElementById('pred-unlock-btn');
+  if (!btn) return;
+  if (S.predUnlock) {
+    btn.textContent = 'Activé ✓';
+    btn.className = 'btn btn-sm btn-primary';
+  } else {
+    btn.textContent = 'Désactivé';
+    btn.className = 'btn btn-sm btn-outline';
+  }
+}
+
+async function togglePredUnlock() {
+  S.predUnlock = !S.predUnlock;
+  await save();
+  updatePredUnlockBtn();
+  toast(S.predUnlock ? 'Pronostics déverrouillés pour tous' : 'Verrouillage normal rétabli');
+}
+
 function unlockAdmin() {
   const code = document.getElementById('admin-pwd').value;
   if (code===S.adminCode || code==='1234') {
     S.adminOpen=true;
     document.getElementById('admin-lock-card').style.display='none';
     document.getElementById('admin-open').style.display='block';
+    updatePredUnlockBtn();
     renderResultsContent();
   } else { toast('Code incorrect'); }
 }
@@ -2585,6 +2612,7 @@ function renderResultats() {
   } else {
     document.getElementById('admin-lock-card').style.display='none';
     document.getElementById('admin-open').style.display='block';
+    updatePredUnlockBtn();
     renderResultsContent();
   }
 }
