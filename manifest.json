@@ -1,0 +1,18 @@
+{
+  "name": "Loto Foot 2026 — BF Party",
+  "short_name": "Loto BF Party",
+  "description": "Pronostics Coupe du Monde 2026 — partie BF Party.",
+  "start_url": "/loto-foot-bfparty/",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f4f5",
+  "theme_color": "#09090b",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
