@@ -62,6 +62,13 @@ Profil + tous ses pronos (ne fait rien si le joueur existe déjà à destination
 node copy-player.mjs main bfparty "Charlotte"
 ```
 
+### Bilan de la journée (classement rigolo)
+Affiche, pour les deux parties, qui a gagné / perdu sur les matchs terminés
+(score exact = 3 pts, bon résultat = 1 pt, raté = 0).
+```bash
+node daily-ranking.mjs
+```
+
 ## Trouver l'identifiant d'un match
 
 Les ids de match sont dans `lib/matches.mjs` (id → équipes). `node inspect.mjs`
@@ -94,7 +101,8 @@ scripts/
 ├── set-result.mjs
 ├── set-pred.mjs
 ├── toggle-unlock.mjs
-└── copy-player.mjs
+├── copy-player.mjs
+└── daily-ranking.mjs    # bilan rigolo du jour (gagnant/perdant par partie)
 ```
 
 ## Note de sécurité
