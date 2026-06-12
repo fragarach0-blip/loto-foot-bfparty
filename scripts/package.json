@@ -1,0 +1,10 @@
+{
+  "name": "loto-foot-admin-scripts",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Scripts d'administration Firestore pour Loto Foot 2026 (parties main + bfparty).",
+  "dependencies": {
+    "firebase": "^10.0.0"
+  }
+}
