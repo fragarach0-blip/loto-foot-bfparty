@@ -119,3 +119,5 @@ règles de sécurité Firestore, pas par cette clé.
 | 2026-06-11 | bfparty   | Déverrouillage des pronos (`predUnlock = on`)                   |
 | 2026-06-11 | bfparty   | Saisie pronos Benjamin : M1 2-0, M2 1-1                          |
 | 2026-06-11 | main + bf | Résultat M1 Mexique 2-0 Afrique du Sud (FINISHED)               |
+| 2026-06-12 | main + bf | Résultat M2 Corée du Sud 2-1 Rép. Tchèque (FINISHED)            |
+| 2026-06-12 | main + bf | Résultat M3 Canada 1-1 Bosnie-Herzég. (FINISHED)               |
